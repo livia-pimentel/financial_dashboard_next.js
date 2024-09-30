@@ -2,8 +2,9 @@
 
 const nextConfig = {
     experimental: {
-        ppr: 'incremental'
+      ppr: true, // Corrigir para valor booleano
+      serverActions: true, // Manter o experimental serverActions ativado
     },
-};
-
-export default nextConfig;
+  };
+  
+  export default nextConfig;
