@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:jsx-a11y/recommended"
+  ],
+  "plugins": ["jsx-a11y"],
+"rules": {
+    "@typescript-eslint/no-unused-vars": "off",  // Disable the unused variables rule
+    "jsx-a11y/alt-text": "warn",                 // Example of accessibility rule
+    "jsx-a11y/anchor-has-content": "warn",       // Another rule of accessibility
+    "jsx-a11y/no-noninteractive-element-interactions": "warn"
+  },
+  "settings": {
+    "jsx-a11y": {
+      "polymorphicPropName": "as",
+      "components": {
+        "CityInput": "input",
+        "CustomButton": "button",
+        "MyButton": "button",
+        "RoundButton": "button"
+      },
+      "attributes": {
+        "for": ["htmlFor", "for"]
+      }
+    }
+  }
+}
