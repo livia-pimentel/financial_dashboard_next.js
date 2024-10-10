@@ -34,6 +34,13 @@ export type State = {
 }
  
 export async function createInvoice(prevState: State, formData: FormData) {
+  // Log of the data received from the form
+  console.log("Dados do formulário recebidos:", {
+    customerId: formData.get('customerId'),
+    amount: formData.get('amount'),
+    status: formData.get('status'),
+  });
+
   // Validate form using Zod
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get('customerId'),
@@ -41,36 +48,46 @@ export async function createInvoice(prevState: State, formData: FormData) {
     status: formData.get('status'),
   });
  
-  // If form validation fails, return errors early. Otherwise, continue.
+  // If the validation fails, return the errors
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create Invoice.',
     };
   }
- 
-  // Prepare data for insertion into the database
+
+  // Prepare data for insertion in the database
   const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split('T')[0];
+
+  // Log of the data that will be inserted into the database
+  console.log("Dados a serem inseridos no banco:", {
+    customerId,
+    amountInCents,
+    status,
+    date,
+  });
  
-  // Insert data into the database
+  // Enter data in the database
   try {
     await sql`
       INSERT INTO invoices (customer_id, amount, status, date)
       VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
     `;
   } catch (error) {
-    // If a database error occurs, return a more specific error.
+    // If a database error occurs, return a specific error
+    console.error('Erro no banco de dados:', error);
     return {
       message: 'Database Error: Failed to Create Invoice.',
     };
   }
- 
-  // Revalidate the cache for the invoices page and redirect the user.
+
+  // Revalidate or cache da page of invoices and redirect or user
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
+
 
 export async function updateInvoice(
     id: string, 
